@@ -21,6 +21,8 @@ Designed and implemented a GPS tracking solution that monitors company vehicles 
 Configured GPS devices, integrated route data, and improved logistics visibility using Python and database management.
 _________________________________________________________________________________________________________
 ##Warehouse Management Web Application
+invenpic1.png
+invenvisu.png
 
 Built a full-stack warehouse management system using Django (Python), MySQL, and Bootstrap.
 Features include product tracking, inventory logging, and a dashboard for stock performance analysis.
