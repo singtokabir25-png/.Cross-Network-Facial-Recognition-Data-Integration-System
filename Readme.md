@@ -13,7 +13,7 @@ import winsound  # Windows-only beep; ถ้าไม่ใช้ Windows ให
 import os
 import tempfile
 import sys
-
+ 
 # reportlab for PDF generation (ใช้ barcode vector ของ reportlab เพื่อให้สแกนได้แน่นอน)
 from reportlab.lib.pagesizes import A4 
 from reportlab.pdfgen import canvas
