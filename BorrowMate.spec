@@ -3,7 +3,7 @@ block_cipher = None
 
 a = Analysis(
     ['BorrowMate.py'],
-    pathex=['C:\\Users\\User\\Speedfacem2'],  # โฟลเดอร์โปรเจกต์
+    pathex=['C:\\Users\\User\\Speedfacem2'],  
     binaries=[
         ('C:\\Users\\User\\Speedfacem2\\myenv_new\\Lib\\site-packages\\pyzbar\\libiconv.dll', 'pyzbar'),
         ('C:\\Users\\User\\Speedfacem2\\myenv_new\\Lib\\site-packages\\pyzbar\\libzbar-64.dll', 'pyzbar'),
@@ -38,7 +38,8 @@ exe = EXE(
     strip=False,
     upx=True,
     upx_exclude=[],
-    runtime_tmpdir=None,  # หรือใส่ path เช่น 'C:\\Users\\User\\Speedfacem2\\tmp'
+    runtime_tmpdir=None,  
     console=False,
     icon='C:\\Users\\User\\Speedfacem2\\icon.ico',
 )
+
