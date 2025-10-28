@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>📊 Dashboard ยอดขาย & สต็อกสินค้า</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<!-- Chart.js & ChartDataLabels -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --bg-gradient-start: #e9f0fb;
+  --bg-gradient-end: #f9fafc;
+  --card-bg: #fff;
+  --text-color: #212529;
+}
+[data-theme="dark"] {
+  --primary-color: #4dabf7;
+  --secondary-color: #adb5bd;
+  --bg-gradient-start: #1e1e2f;
+  --bg-gradient-end: #2c2c3e;
+  --card-bg: #2c2c3e;
+  --text-color: #f8f9fa;
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: background 0.5s, color 0.5s;
+}
+
+.container { max-width: 960px; }
+
+h1 {
+  font-weight: 700;
+  color: var(--primary-color);
+  text-shadow: 1px 1px 3px rgba(13, 110, 253, 0.3);
+  user-select: none;
+}
+
+.card {
+  border-radius: 14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06), 0 8px 20px rgba(13, 110, 253, 0.15);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, background 0.3s;
+  background: var(--card-bg);
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.1), 0 20px 40px rgba(13, 110, 253, 0.35);
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--primary-color);
+  user-select: none;
+}
+
+.chart-container { position: relative; height: 350px; }
+.chart-container canvas { width: 100% !important; }
+
+footer {
+  margin-top: 4rem;
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+@media (max-width: 576px) { .chart-container { height: 280px; } }
+
+/* Theme switch button */
+#themeToggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- Theme toggle button -->
+<button class="btn btn-sm btn-outline-primary" id="themeToggle">🌙 Dark Mode</button>
+
+<div class="container my-5">
+  <h1 class="mb-5 text-center">📊 Dashboard ยอดขาย &amp; สต็อกสินค้า</h1>
+
+  <div class="row g-4 justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card p-4">
+        <h5 class="card-title">ยอดการออกสินค้าของวันนี้</h5>
+        <div class="chart-container">
+          <canvas id="todayChart" aria-label="กราฟยอดการออกสินค้าของวันนี้" role="img"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card p-4">
+        <h5 class="card-title">ยอดการออกสินค้าของเดือนนี้</h5>
+        <div class="chart-container">
+          <canvas id="monthlyChart" aria-label="กราฟยอดการออกสินค้าของเดือนนี้" role="img"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card p-4">
+        <h5 class="card-title">ยอดการออกสินค้าของปีนี้</h5>
+        <div class="chart-container">
+          <canvas id="yearlyChart" aria-label="กราฟยอดการออกสินค้าของปีนี้" role="img"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal สำหรับกราฟขยาย -->
+<div class="modal fade" id="chartModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-light" data-theme="light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">กราฟ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="chart-container" style="height:500px;">
+          <canvas id="modalChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  &copy; <span id="year"></span> CSW and PFF 
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Theme toggle
+  const themeBtn = document.getElementById('themeToggle');
+  const body = document.body;
+  themeBtn.addEventListener('click', () => {
+    const modalContent = document.querySelector('#chartModal .modal-content');
+    if(body.getAttribute('data-theme') === 'light') {
+      body.setAttribute('data-theme', 'dark');
+      modalContent.setAttribute('data-theme','dark');
+      themeBtn.textContent = '☀️ Light Mode';
+    } else {
+      body.setAttribute('data-theme', 'light');
+      modalContent.setAttribute('data-theme','light');
+      themeBtn.textContent = '🌙 Dark Mode';
+    }
+  });
+
+  // Set current year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Django context data placeholders
+  const todayLabels = {{ today_labels|safe }};
+  const todayData = {{ today_data|safe }};
+  const monthlyLabels = {{ monthly_labels|safe }};
+  const monthlyData = {{ monthly_data|safe }};
+  const yearlyLabels = {{ yearly_labels|safe }};
+  const yearlyData = {{ yearly_data|safe }};
+
+  const commonOptions = {
+    responsive: true,
+    animation: { duration: 1500, easing: 'easeOutQuart' },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: { font: { size: 14, weight: '600' }, color: 'var(--text-color)' }
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: 'var(--primary-color)',
+        titleFont: { weight: 'bold', size: 16 },
+        bodyFont: { size: 14 },
+        padding: 10,
+        cornerRadius: 6,
+      },
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+        color: 'var(--text-color)', 
+        font: { weight: '600', size: 12 },
+        formatter: (value) => value.toLocaleString()
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          font: { size: 13, weight: '600' },
+          color: 'var(--text-color)',
+          stepSize: 1,
+          callback: function(value) { return value.toLocaleString(); }
+        },
+        grid: { color: '#e9ecef', borderDash: [6,4], drawBorder: false }
+      },
+      x: {
+        ticks: { font: { size: 13, weight: '600' }, color: 'var(--text-color)', maxRotation: 45, minRotation: 30, autoSkip: true, maxTicksLimit: 10 },
+        grid: { display: false }
+      }
+    }
+  };
+
+  function createBarChart(canvasId, labels, data, color) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    return new Chart(ctx, {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ label: 'จำนวนที่ออก', data: data, backgroundColor: color, borderRadius: 8, borderSkipped: false, maxBarThickness: 40, hoverBackgroundColor: shadeColor(color, -15) }] },
+      options: commonOptions,
+      plugins: [ChartDataLabels]
+    });
+  }
+
+  function shadeColor(color, percent) {
+    const f=color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+    if(!f) return color;
+    let R=parseInt(f[1]), G=parseInt(f[2]), B=parseInt(f[3]);
+    R = parseInt(R*(100+percent)/100); G = parseInt(G*(100+percent)/100); B = parseInt(B*(100+percent)/100);
+    R=(R<255)?R:255; G=(G<255)?G:255; B=(B<255)?B:255;
+    return `rgba(${R}, ${G}, ${B}, 0.85)`;
+  }
+
+  // สร้างกราฟเล็กบนการ์ด
+  createBarChart('todayChart', todayLabels, todayData, 'rgba(255, 193, 7, 0.85)');
+  createBarChart('monthlyChart', monthlyLabels, monthlyData, 'rgba(25, 135, 84, 0.85)');
+  createBarChart('yearlyChart', yearlyLabels, yearlyData, 'rgba(220, 53, 69, 0.85)');
+
+  // ฟังก์ชันเปิด modal พร้อมสร้างกราฟใหม่ + แสดงตัวเลขบน bar + animation
+  function openChartModal(title, labels, data, color) {
+    const modalTitle = document.getElementById('modalTitle');
+    modalTitle.textContent = title;
+
+    if(window.modalChartInstance) window.modalChartInstance.destroy();
+
+    const ctx = document.getElementById('modalChart').getContext('2d');
+    window.modalChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'จำนวนที่ออก',
+          data: data,
+          backgroundColor: color,
+          borderRadius: 8,
+          borderSkipped: false,
+          maxBarThickness: 60,
+          hoverBackgroundColor: shadeColor(color, -15)
+        }]
+      },
+      options: {
+        ...commonOptions,
+        animation: {
+          duration: 1500,
+          easing: 'easeOutQuart',
+          onComplete: function() {
+            this.update();
+          }
+        },
+        plugins: {
+          ...commonOptions.plugins,
+          datalabels: {
+            anchor: 'end',
+            align: 'end',
+            color: 'var(--text-color)',
+            font: { weight: '600', size: 14 },
+            formatter: (value) => value.toLocaleString(),
+            animation: { duration: 1000, easing: 'easeOutQuart' }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    const chartModal = new bootstrap.Modal(document.getElementById('chartModal'));
+    chartModal.show();
+  }
+
+  // EventListener ให้การ์ดเปิด modal
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const cardTitle = card.querySelector('.card-title').textContent;
+      if(cardTitle.includes('วันนี้')) openChartModal(cardTitle, todayLabels, todayData, 'rgba(255, 193, 7, 0.85)');
+      if(cardTitle.includes('เดือน')) openChartModal(cardTitle, monthlyLabels, monthlyData, 'rgba(25, 135, 84, 0.85)');
+      if(cardTitle.includes('ปี')) openChartModal(cardTitle, yearlyLabels, yearlyData, 'rgba(220, 53, 69, 0.85)');
+    });
+  });
+</script>
+
+</body>
+</html>

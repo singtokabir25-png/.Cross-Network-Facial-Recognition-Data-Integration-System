@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บันทึกสำเร็จ</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background: #f8f9fa;
+        font-family: "Sarabun","Segoe UI",sans-serif;
+    }
+    .card {
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        animation: fadeIn 0.8s ease;
+    }
+    @keyframes fadeIn {
+        from {opacity:0; transform: translateY(20px);}
+        to {opacity:1; transform: translateY(0);}
+    }
+    .icon-success {
+        font-size: 4rem;
+        color: #28a745;
+    }
+    .btn-primary {
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 1.1rem;
+    }
+</style>
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+<div class="container text-center">
+    <div class="card p-5">
+        <div class="icon-success mb-3">✅</div>
+        <h1 class="text-success mb-3">บันทึกการซื้อสำเร็จ!</h1>
+        <p class="mb-1">ผู้ซื้อ: <strong>{{ user_name }}</strong></p>
+        <p class="mb-4">วัน-เวลา: <strong>{{ timestamp }}</strong></p>
+        <a href="{% url 'inventory' %}" class="btn btn-primary shadow">กลับไปหน้า Inventory</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

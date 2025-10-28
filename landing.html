@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PFF & CSW Inventory Check </title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body, html {
+  margin:0; padding:0; height:100%;
+  font-family:'Sarabun', sans-serif;
+  overflow:hidden; color:white;
+  background:#000;
+}
+
+/* --- Vanta birds container --- */
+#vanta-bg {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  z-index:0;
+}
+
+/* --- Stars --- */
+.stars {
+  position:absolute;
+  width:100%; height:100%;
+  z-index:0.5;
+  overflow:hidden;
+}
+.star {
+  position:absolute;
+  width:2px; height:2px;
+  background:white;
+  border-radius:50%;
+  opacity:0.8;
+  animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity:0.2; }
+  to   { opacity:1; }
+}
+.shooting-star {
+  position: absolute;
+  width: 2px; 
+  height: 80px;
+  /* กลับ gradient ให้ขาวด้านล่าง */
+  background: linear-gradient(to top, white, transparent); 
+  opacity: 1;
+  transform: rotate(45deg);
+  animation: shoot 4s linear infinite;
+}
+
+@keyframes shoot {
+  0%   { transform: translate(600px, -200px) rotate(45deg); opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translate(-200px, 600px) rotate(45deg); opacity: 0; }
+}
+
+
+
+/* --- Aurora overlay (smooth curves) --- */
+.aurora-layer {
+  position:absolute;
+  width:100%; height:100%;
+  overflow:hidden;
+  z-index:1;
+  mix-blend-mode: screen;
+}
+.aurora {
+  position: absolute;
+  width: 80vmax;
+  height: 20vmax;
+  background: linear-gradient(
+    90deg, 
+    rgba(80, 255, 160, 0.6), 
+    rgba(100, 200, 255, 0.5), 
+    rgba(200, 120, 255, 0.4), 
+    rgba(255, 150, 220, 0.3)
+  );
+  filter: blur(60px);
+  opacity: 0.7;
+  animation: moveAurora 25s infinite linear, morphAurora 18s infinite alternate ease-in-out;
+}
+
+/* ให้แต่ละ aurora เคลื่อนไหวไม่พร้อมกัน */
+.aurora:nth-child(1) { top: 10%; left: -20%; animation-delay: 0s; }
+.aurora:nth-child(2) { top: 40%; left: 10%; animation-delay: 5s; }
+.aurora:nth-child(3) { top: 60%; left: -15%; animation-delay: 10s; }
+.aurora:nth-child(4) { top: 30%; left: 30%; animation-delay: 15s; }
+
+@keyframes moveAurora {
+  0%   { transform: translateX(-15%) translateY(0) rotate(0deg); }
+  50%  { transform: translateX(15%) translateY(-10%) rotate(15deg); }
+  100% { transform: translateX(-15%) translateY(0) rotate(0deg); }
+}
+
+@keyframes morphAurora {
+  0%   { border-radius: 40% 60% 60% 40% / 50% 40% 60% 50%; }
+  50%  { border-radius: 70% 40% 50% 60% / 40% 60% 50% 70%; }
+  100% { border-radius: 50% 70% 40% 60% / 60% 50% 70% 40%; }
+}
+
+
+/* --- Foreground UI --- */
+.container {
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center; text-align:center;
+}
+img.logo {
+  width:280px; animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-15px);}
+  100%{transform:translateY(0);}
+}
+h1 { margin-top:20px; font-size:2.2rem; text-shadow:0 0 10px black; }
+
+button {
+  margin-top:30px; padding:12px 40px; font-size:18px;
+  border:none; border-radius:15px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+  cursor:pointer;
+  transition: 0.3s;
+}
+button:hover {
+  box-shadow: 0 0 25px rgba(255,255,255,0.6);
+  transform: scale(1.1);
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- Vanta Birds -->
+<div id="vanta-bg"></div>
+
+<!-- Stars container -->
+<div class="stars"></div>
+
+<!-- Aurora Overlay -->
+<div class="aurora-layer">
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  
+</div>
+
+<!-- Foreground UI -->
+<div class="container">
+    <img src="{% static 'images/S__9510921-removebg-preview.png' %}" alt="Logo" class="logo">
+    <h1>ยินดีต้อนรับสู่ Inventory</h1>
+    <button onclick="start()">Start</button>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"></script>
+<script>
+// Start button
+function start(){ window.location.href="{% url 'inventory' %}"; }
+
+// Initialize Vanta Birds
+VANTA.BIRDS({
+  el: "#vanta-bg",
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00,
+  scale: 1.0,
+  backgroundColor: 0x000000,
+  color1: 0xff1929,
+  color2: 0xffffff,
+  color3: 0x6edeef
+});
+
+// Generate stars dynamically
+const starsContainer = document.querySelector('.stars');
+// small stars
+for (let i = 0; i < 50; i++) {
+  const star = document.createElement('div');
+  star.classList.add('star');
+  star.style.top = Math.random() * 100 + '%';
+  star.style.left = Math.random() * 100 + '%';
+  star.style.animationDuration = (1 + Math.random() * 2) + 's'; // random twinkle
+  starsContainer.appendChild(star);
+}
+// shooting stars
+for (let i = 0; i < 2; i++) {
+  const shooting = document.createElement('div');
+  shooting.classList.add('shooting-star');
+  shooting.style.top = Math.random() * 50 + '%';
+  shooting.style.left = Math.random() * 100 + '%';
+  shooting.style.animationDelay = Math.random() * 5 + 's';
+  starsContainer.appendChild(shooting);
+}
+</script>
+
+</body>
+</html>
