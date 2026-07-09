@@ -1,0 +1,146 @@
+body {
+  align-items: center;
+  display: flex;
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+  height: 100vh;
+  justify-content: center;
+  margin: 0;
+  background-color: #f9fafb;
+}
+
+/* ปรับ Container ให้รอรับสถานะ active */
+.container {
+  align-items: center;
+  background: #000;
+  border-radius: 40px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  position: relative;
+  width: 200px;
+  transition: all 0.3s;
+  overflow: visible;
+  border: none;
+  cursor: pointer;
+}
+
+.text {
+  color: white;
+  position: absolute;
+  transition: opacity 300ms;
+  user-select: none;
+}
+
+.fingerprint {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  stroke: #777;
+}
+
+.fingerprint-active {
+  stroke: #fff;
+}
+
+.fingerprint-out {
+  opacity: 1;
+}
+
+.odd {
+  stroke-dasharray: 0px 50px;
+  stroke-dashoffset: 1px;
+  transition: stroke-dasharray 1ms;
+}
+
+.even {
+  stroke-dasharray: 50px 50px;
+  stroke-dashoffset: -41px;
+  transition: stroke-dashoffset 1ms;
+}
+
+.ok {
+  opacity: 0;
+  position: absolute;
+}
+
+/* --- สถานะ Active เมื่อมีการกด Login --- */
+
+.container.active {
+  animation: Container 6s forwards;
+}
+
+.container.active .text {
+  opacity: 0;
+  animation: Text 6s forwards;
+}
+
+.container.active .fingerprint {
+  opacity: 1 !important;
+  transition: opacity 300ms 200ms;
+}
+
+.container.active .fingerprint-base .odd {
+  stroke-dasharray: 50px 50px;
+  transition: stroke-dasharray 800ms 100ms;
+}
+
+.container.active .fingerprint-base .even {
+  stroke-dashoffset: 0px;
+  transition: stroke-dashoffset 800ms;
+}
+
+.container.active .fingerprint-active .odd {
+  stroke-dasharray: 50px 50px;
+  transition: stroke-dasharray 2000ms 1500ms;
+}
+
+.container.active .fingerprint-active .even {
+  stroke-dashoffset: 0px;
+  transition: stroke-dashoffset 2000ms 1300ms;
+}
+
+.container.active .fingerprint-out {
+  opacity: 0;
+  transition: opacity 300ms 4100ms;
+}
+
+.container.active .ok {
+  opacity: 1;
+  animation: Ok 6s forwards;
+}
+
+/* --- Keyframes --- */
+@keyframes Container {
+  0% { width: 200px }
+  6% { width: 80px }
+  71% { transform: scale(1); }
+  75% { transform: scale(1.2); }
+  77% { transform: scale(1); }
+  94% { width: 80px }
+  100% { width: 200px }
+}
+
+@keyframes Text {
+  0% { opacity: 1; transform: scale(1); }
+  6% { opacity: 0; transform: scale(0.5); }
+  94% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes Ok {
+  0% { opacity: 0 }
+  70% { opacity: 0; transform: scale(0); }
+  75% { opacity: 1; transform: scale(1.1); }
+  77% { opacity: 1; transform: scale(1); }
+  92% { opacity: 1; transform: scale(1); }
+  96% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 0 }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Fire Safety Monitoring System",
+  "short_name": "FireSafety",
+  "description": "ระบบตรวจเช็คถังดับเพลิงดิจิทัล",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#ef4444",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

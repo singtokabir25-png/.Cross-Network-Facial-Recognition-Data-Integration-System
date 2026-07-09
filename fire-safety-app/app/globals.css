@@ -1,0 +1,31 @@
+/* app/globals.css */
+
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ... โค้ดเดิม ... */
+
+/* เพิ่มส่วนนี้ต่อท้ายไฟล์ */
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+@keyframes float-bubble {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+.animate-float {
+  animation: float-bubble 6s ease-in-out infinite;
+}
