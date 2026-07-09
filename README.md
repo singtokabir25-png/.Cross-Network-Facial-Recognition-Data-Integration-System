@@ -12,8 +12,8 @@ A comprehensive full-stack digital solution for inventory tracking and warehouse
 * **Database:** Supabase (PostgreSQL)
 
 ### Previews
-![WMS Dashboard](./assets/invenvisu.png)
-![WMS Inventory](./assets/invenpic1.png)
+![WMS Dashboard](./Werehouse/invenvisu.png)
+![WMS Inventory](./Werehouse/invenpic1.png)
 
 ### Key Features
 * **Real-time Tracking:** Dynamic inventory tracking and transaction logging utilizing Supabase real-time capabilities.
@@ -42,7 +42,7 @@ Automated solutions for corporate asset accountability and safety compliance.
 * Python, SQLite, Tkinter, pyzbar (Barcode Scanning), ReportLab
 
 ### Previews
-![BorrowMate UI](./assets/Borrowmatepic1.png)
+![BorrowMate UI](./Borrowmate/Borrowmatepic1.png)
 
 ### Key Features
 * **Barcode Integration:** Instant tool check-in/out via barcode scanning with automated transaction logging.
@@ -56,9 +56,6 @@ A high-performance industrial web application for real-time monitoring of materi
 
 ### Tech Stack
 * Next.js, Supabase, Supabase Auth
-
-### Previews
-![Lift Tracker](./assets/landing.png)
 
 ### Key Features
 * **Strict Data Integrity:** Implemented robust Role-Based Access Control (RBAC) separating roles for manual entry, office administration, and IT oversight.
